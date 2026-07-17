@@ -1,6 +1,6 @@
 {
 	"name": "@orgsdk/plugin-llm",
-	"version": "1.2.3",
+	"version": "1.2.4",
 	"description": "LLM-powered generation, evaluation, and research via any OpenAI-compatible endpoint",
 	"type": "module",
 	"private": true,

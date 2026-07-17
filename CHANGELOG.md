@@ -6,6 +6,64 @@ The catalog treats versions as **write-once**: a given `(slug, version)` may be
 re-published only with identical artifact content; differing content is
 rejected with HTTP 409. Every entry below is therefore forward-only.
 
+## [1.2.4] — artifact-identity remediation + latest-pointer restoration
+
+A forward-only patch release. **No plugin source behavior changed** — the seven
+safe functions, the token auth provider, the generic-first credential
+resolution, the cloud proxy / direct transport modes, the Zod config schema,
+the agent-facing docs/guides, and the fetch-based client are byte-identical to
+`1.2.3`. The only publishable content delta is the version bump itself
+(`plugin/.plugin.json` and `package.json` `1.2.3` → `1.2.4`).
+
+### Why 1.2.4 (artifact-identity remediation)
+
+Prior to this release the catalog `latest` pointer for `llm` had **regressed**
+to the legacy monorepo `1.2.2`, while a legacy `1.2.3` occupied a slot in the
+version history. The pointer had moved backward instead of forward.
+
+The platform deployed two invariants to bind catalog artifact identity to its
+source basis and to forbid backward pointer movement
+(OrgSDK/OrgSDK commit `6ff110c`, CI `29549769039`):
+
+- **Source-checksum.** Each published version row records a non-null
+  `source_checksum` derived from the validated staged source. Re-publishing the
+  same `(slug, version)` now succeeds only when the source checksum is
+  identical (provably source-identical → idempotent); divergent source is
+  rejected. This makes the write-once catalog guarantee source-bound rather
+  than artifact-blob-bound.
+- **Version-advance (downgrade) guard.** A new publish may only advance the
+  `latest` pointer forward; a publish that would move `latest` backward is
+  rejected. This prevents the regression that left `latest` on `1.2.2`.
+
+Because catalog versions are write-once and a legacy `1.2.3` already occupies
+that slot, the remediated artifact cannot reoccupy `1.2.3`. It lands as a fresh
+forward-only `1.2.4`. Publishing `1.2.4` **restores the `latest` pointer
+forward** to `1.2.4` (pointer restoration), and the version row now carries a
+non-null `source_checksum` anchoring its identity.
+
+### Changed
+
+- Bump `plugin/.plugin.json` version `1.2.3` → `1.2.4` (catalog source of
+  truth).
+- Bump `package.json` version `1.2.3` → `1.2.4` (kept in sync; enforced by the
+  CI version guard).
+- Bump the `tests/manifest.test.ts` version assertion to `1.2.4`.
+
+### Frozen (unchanged from 1.2.3)
+
+- All seven safe functions — `generate`, `evalBoolean`, `evalMultiCategory`,
+  `evalStructured`, `querySearch`, `summarizeText`, `synthesizeAnswer`.
+- Token auth provider, credential resolution, transport modes, Zod config
+  schema, docs/guides, constants — verbatim.
+- `@orgsdk/plugins@0.2.1` contract pin, `zod@^4.0.0` runtime dependency, and
+  the generated artifact shape.
+
+### Republish contract
+
+Re-publishing `1.2.4` with unchanged source must succeed idempotently (matching
+`source_checksum`); any source divergence is rejected. This release is verified
+by one unchanged republish proving source-basis idempotency.
+
 ## [1.2.3] — standalone repository + artifact-format release
 
 A forward-only patch release that migrates the llm plugin from the OrgSDK

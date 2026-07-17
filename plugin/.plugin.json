@@ -1,7 +1,7 @@
 {
 	"$schema": "https://orgsdk.ai/schemas/plugin-manifest.v1.json",
 	"name": "llm",
-	"version": "1.2.3",
+	"version": "1.2.4",
 	"description": "LLM-powered generation, evaluation, and research via any OpenAI-compatible endpoint",
 	"entry": "index.ts",
 	"auth": {

@@ -88,7 +88,7 @@ status-check bypass races (defense in depth).
 
 ## Version policy
 
-- **Current version:** `1.2.3`.
+- **Current version:** `1.2.4`.
 - The manifest version (`plugin/.plugin.json` → `version`) is the **source of
   truth** for the catalog. `package.json` → `version` is kept in sync (enforced
   by the CI version guard).
@@ -99,6 +99,26 @@ status-check bypass races (defense in depth).
 - Versions are **write-once** in the catalog: re-publishing the same
   `(slug, version)` with identical content is idempotent; different content is
   rejected with HTTP 409. Always bump the version for changed content.
+
+### 1.2.4 — artifact-identity remediation + latest-pointer restoration
+
+`1.2.4` is a forward-only patch release with **no functional source change**.
+The only publishable content delta versus `1.2.3` is the version bump itself.
+
+It exists to remediate a catalog artifact-identity regression:
+
+- The catalog `latest` pointer for `llm` had regressed to the legacy monorepo
+  `1.2.2`, with a legacy `1.2.3` already occupying that version slot.
+- The platform deployed a **source-checksum** invariant (each version row
+  records a non-null `source_checksum`; republish is idempotent only on
+  matching source) and a **version-advance (downgrade) guard** (the `latest`
+  pointer may only move forward) — OrgSDK/OrgSDK commit `6ff110c`,
+  CI `29549769039`.
+- Because `1.2.3` is a write-once slot already held by legacy content, the
+  remediated artifact lands as `1.2.4`, restoring the `latest` pointer forward.
+
+Publishing `1.2.4` is verified by one unchanged republish proving source-basis
+idempotency (matching `source_checksum`).
 
 ### 1.2.3 — standalone repository + artifact-format release
 
@@ -144,8 +164,8 @@ dist/
 │   ├── research-functions.ts
 │   ├── docs/overview.md
 │   └── guides/usage-patterns.md
-├── llm-1.2.3.manifest.json          # file list + SHA-256 checksums (sorted)
-└── llm-1.2.3.tgz                    # tarball of the plugin folder
+├── llm-1.2.4.manifest.json          # file list + SHA-256 checksums (sorted)
+└── llm-1.2.4.tgz                    # tarball of the plugin folder
 ```
 
 Packaging is deterministic: `dist/` is fully removed and recreated on every
