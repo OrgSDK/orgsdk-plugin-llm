@@ -1,0 +1,31 @@
+{
+	"$schema": "https://orgsdk.ai/schemas/plugin-manifest.v1.json",
+	"name": "llm",
+	"version": "1.2.3",
+	"description": "LLM-powered generation, evaluation, and research via any OpenAI-compatible endpoint",
+	"entry": "index.ts",
+	"auth": {
+		"type": "token",
+		"provider": "llm",
+		"label": "API Token",
+		"hint": "Used as the Bearer token for LLM requests. Changing supported provider settings does not require reconnecting."
+	},
+	"marketplace": {
+		"displayName": "LLM",
+		"category": "Data & AI",
+		"tagline": "LLM-powered generation, evaluation, and research inside agent workflows — works with OpenRouter, Ollama Cloud, or any OpenAI-compatible API.",
+		"tags": ["ai", "generation"],
+		"useCases": [
+			"Generate and revise drafts with a chosen quality level",
+			"Evaluate and classify text with confidence scoring",
+			"Extract structured data from unstructured text",
+			"Summarize long documents and synthesize researched answers"
+		],
+		"permissionsSummary": "Read-only model calls via your API token. No write or destructive actions.",
+		"links": {
+			"homepage": "https://openrouter.ai",
+			"docs": "https://openrouter.ai/docs",
+			"sourceRepo": "https://github.com/OrgSDK/orgsdk-plugin-llm"
+		}
+	}
+}
