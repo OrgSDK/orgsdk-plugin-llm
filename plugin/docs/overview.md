@@ -1,3 +1,13 @@
+# Current execution contract
+
+Requests have a 15-second I/O deadline and a 2 MB request/response limit. Token output defaults to 4096 and is capped at 128000. Provider error bodies are excluded from execution errors. Configure provider/model/baseURL in OrgSDK and attach an `llm` credential; fixtures do not call a live model.
+
+Native OAuth providers receive only `{source: "byo", secret_accessToken}`. The host owns refresh. The first-party relay is retired.
+
+## Historical source reference
+
+The following describes the former author-source host; current npm and native credential behaviour above takes precedence.
+
 # LLM
 
 LLM-powered generation, evaluation, and research — classification, structured

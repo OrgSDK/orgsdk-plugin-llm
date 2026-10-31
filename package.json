@@ -1,6 +1,6 @@
 {
 	"name": "@orgsdk/plugin-llm",
-	"version": "1.2.4",
+	"version": "1.2.5",
 	"description": "LLM-powered generation, evaluation, and research via any OpenAI-compatible endpoint",
 	"type": "module",
 	"private": true,
@@ -12,16 +12,37 @@
 		"validate": "orgsdk-plugin validate",
 		"package": "orgsdk-plugin package",
 		"version-guard": "orgsdk-plugin version-guard",
-		"publish": "orgsdk-plugin publish",
-		"build": "bun run typecheck && bun run validate && bun run package"
+		"build": "bun run typecheck && bun run validate && bun run package",
+		"publish:catalog": "orgsdk-plugin publish",
+		"build:npm": "node scripts/build-npm.mjs",
+		"test:executor": "node scripts/test-executor.mjs",
+		"pack:npm": "npm pack ./dist/npm --ignore-scripts",
+		"test:registration": "node scripts/test-registration.mjs"
 	},
 	"dependencies": {
-		"zod": "^4.0.0"
+		"zod": "4.6.7"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.12",
 		"@orgsdk/plugins": "0.2.2",
 		"@types/bun": "^1.3.9",
-		"typescript": "~6.0.3"
+		"typescript": "~6.0.3",
+		"@orgsdk/executor": "0.1.0"
+	},
+	"patchedDependencies": {
+		"@orgsdk/executor@0.1.0": "patches/@orgsdk%2Fexecutor@0.1.0.patch"
+	},
+	"license": "Apache-2.0",
+	"author": "OrgSDK",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/OrgSDK/orgsdk-plugin-llm.git"
+	},
+	"bugs": {
+		"url": "https://github.com/OrgSDK/orgsdk-plugin-llm/issues"
+	},
+	"homepage": "https://github.com/OrgSDK/orgsdk-plugin-llm#readme",
+	"overrides": {
+		"zod": "4.6.7"
 	}
 }

@@ -80,7 +80,7 @@ describe("packaging", () => {
 		// zod IS a runtime dependency (config + output schemas use it).
 		const deps = pkg.dependencies as Record<string, string> | undefined;
 		expect(deps).toBeDefined();
-		expect(deps?.zod).toBe("^4.0.0");
+		expect(deps?.zod).toBe("4.6.7");
 		// The authoring SDK must NOT be a runtime dependency (type-only).
 		expect(deps?.["@orgsdk/plugins"]).toBeUndefined();
 		// The OpenAI SDK must NOT be a runtime dependency (fetch-based client).
