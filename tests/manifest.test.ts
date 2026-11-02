@@ -15,9 +15,9 @@ describe("manifest", () => {
 		expect(m.name).toBe("llm");
 	});
 
-	it("has the bumped version 1.2.4", async () => {
+	it("has the bumped version 1.2.5", async () => {
 		const m = await readManifest();
-		expect(m.version).toBe("1.2.4");
+		expect(m.version).toBe("1.2.5");
 	});
 
 	it("declares the canonical $schema", async () => {

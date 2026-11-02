@@ -1,3 +1,4 @@
+import { fetchJson } from "./http-client";
 /**
  * Self-contained LLM client utilities for the llm plugin.
  *
@@ -212,24 +213,20 @@ async function chatCompletions(
 		);
 	}
 
-	const res = await fetch(`${conn.baseURL}/chat/completions`, {
+	const maxTokens = opts.max_tokens ?? 4096;
+	if (!Number.isInteger(maxTokens) || maxTokens < 1 || maxTokens > 128_000)
+		throw new Error("INVALID_TOKEN_LIMIT");
+	const body = JSON.stringify({ ...opts, max_tokens: maxTokens });
+	if (Buffer.byteLength(body) > 2_000_000) throw new Error("REQUEST_TOO_LARGE");
+	return fetchJson(`${conn.baseURL}/chat/completions`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
 			Authorization: `Bearer ${conn.apiKey}`,
 			...conn.headers,
 		},
-		body: JSON.stringify(opts),
-	});
-
-	if (!res.ok) {
-		const detail = await res.text().catch(() => "");
-		throw new Error(
-			`LLM request failed (${res.status} ${res.statusText}): ${detail.slice(0, 500)}`,
-		);
-	}
-
-	return (await res.json()) as ChatCompletionResponse;
+		body,
+	}) as Promise<ChatCompletionResponse>;
 }
 
 /**
